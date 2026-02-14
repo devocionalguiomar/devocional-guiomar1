@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Devocional Guiomar</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+* {
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f3efe7;
+    color: #333;
+}
+
+/* TOPO */
+.header {
+    background: #0a3d2e;
+    color: #fff;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header img {
+    height: 130px;
+    background: #fff;
+    padding: 6px;
+    border-radius: 8px;
+}
+
+/* LAYOUT */
+.container {
+    padding: 15px;
+}
+
+.devocional {
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.devocional h2 {
+    color: #0a3d2e;
+}
+
+/* DIAS */
+.dias {
+    background: #e7dfcf;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.lista-dias {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.lista-dias button {
+    width: 100%;
+    padding: 6px;
+    margin-bottom: 4px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.lista-dias button.ativo {
+    background: #0a3d2e;
+    color: #fff;
+}
+
+/* RODAPÉ */
+.footer {
+    background: #0a3d2e;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+/* DESKTOP */
+@media (min-width: 768px) {
+    .container {
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+        gap: 15px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <img src="logo-devocional.png" alt="Devocional Guiomar">
+    <div>
+        <h1>Devocional Guiomar</h1>
+        <p>Lendo, entendendo, acreditando e praticando.</p>
+    </div>
+</header>
+
+<main class="container">
+
+    <section class="devocional">
+        <p id="diaTitulo"></p>
+        <h2 id="versiculo"></h2>
+
+        <p><strong>Pensamento:</strong><br>
+        <span id="pensamento"></span></p>
+
+        <p><strong>Oração:</strong><br>
+        <span id="oracao"></span></p>
+    </section>
+
+    <aside class="dias">
+        <h3>Dias do Devocional</h3>
+        <div id="listaDias" class="lista-dias"></div>
+    </aside>
+
+</main>
+
+<footer class="footer">
+    © <span id="ano"></span> Devocional Guiomar. Todos os direitos reservados.
+</footer>
+
+<script>
+// ===============================
+// DEVOCIONAL GUIOMAR – SCRIPT
+// ===============================
+
+// DADOS BASE
+const versiculosBase = [
+  "O Senhor é meu pastor; nada me faltará. (Salmos 23:1)",
+  "Entrega o teu caminho ao Senhor; confia nele. (Salmos 37:5)",
+  "Tudo posso naquele que me fortalece. (Filipenses 4:13)",
+  "Buscai primeiro o Reino de Deus. (Mateus 6:33)",
+  "Deus é o nosso refúgio e fortaleza. (Salmos 46:1)"
+];
+
+const pensamentosBase = [
+  "Confie em Deus mesmo quando o caminho parecer difícil.",
+  "Deus está agindo mesmo quando você não percebe.",
+  "A fé transforma dificuldades em testemunhos.",
+  "A Palavra de Deus é direção segura.",
+  "Espere no Senhor e Ele agirá."
+];
+
+const oracoesBase = [
+  "Senhor Deus, entrego este dia em Tuas mãos. Amém.",
+  "Pai amado, fortalece minha fé hoje. Amém.",
+  "Senhor, guia meus passos conforme a Tua vontade. Amém.",
+  "Deus eterno, guarda meu coração. Amém.",
+  "Pai, confio minha vida em Ti. Amém."
+];
+
+// GERAR 365 DIAS
+const versiculos = [];
+const pensamentos = [];
+const oracoes = [];
+
+for (let i = 0; i < 365; i++) {
+    versiculos.push(versiculosBase[i % versiculosBase.length]);
+    pensamentos.push(pensamentosBase[i % pensamentosBase.length]);
+    oracoes.push(oracoesBase[i % oracoesBase.length]);
+}
+
+// ELEMENTOS
+const listaDias = document.getElementById("listaDias");
+const diaTitulo = document.getElementById("diaTitulo");
+const versiculo = document.getElementById("versiculo");
+const pensamento = document.getElementById("pensamento");
+const oracao = document.getElementById("oracao");
+
+// MOSTRAR DIA
+function mostrarDia(dia) {
+    diaTitulo.innerText = `Dia ${dia} de 365`;
+    versiculo.innerText = versiculos[dia - 1];
+    pensamento.innerText = pensamentos[dia - 1];
+    oracao.innerText = oracoes[dia - 1];
+
+    document.querySelectorAll(".lista-dias button")
+        .forEach(btn => btn.classList.remove("ativo"));
+
+    document.getElementById("dia-" + dia).classList.add("ativo");
+}
+
+// CRIAR BOTÕES
+for (let i = 1; i <= 365; i++) {
+    const btn = document.createElement("button");
+    btn.id = "dia-" + i;
+    btn.textContent = "Dia " + i;
+    btn.onclick = () => mostrarDia(i);
+    listaDias.appendChild(btn);
+}
+
+// DIA ATUAL
+const hoje = new Date();
+const inicioAno = new Date(hoje.getFullYear(), 0, 0);
+const diaAtual = Math.floor((hoje - inicioAno) / 86400000);
+mostrarDia(diaAtual);
+
+// ANO
+document.getElementById("ano").innerText =
+    new Date().getFullYear();
+</script>
+
+</body>
+</html>
